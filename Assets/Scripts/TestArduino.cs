@@ -129,7 +129,7 @@ public class TestArduino : MonoBehaviour
         if (randomTimer >= randomInterval)
         {
             randomTimer = 0;
-            currentIndex = Random.Range(0, 2);
+            currentIndex = Random.Range(0, 5);
             SendToArduino(currentIndex);
             UpdateLEDUI();
         }
