@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     // ================= SCORE =================
     public Transform scoreObject;
     public float scoreMoveDistance = 625f;
+    [SerializeField] private AnimationCurve bonusCurve;
+    [SerializeField] private float bonusDistance = 2f;
     Vector3 scoreStartPos;
     int score = 0;
     public AudioClip scoreSound;
@@ -57,6 +59,8 @@ public class GameManager : MonoBehaviour
     public VideoPlayer LoseVideoPlayer;
     public float videoFadeSpeed = 2f;
     public RawImage VideoFrame;
+    public RawImage WinFirstFrame;
+    public RawImage WinVideoFrame;
 
     // ================= SERIAL =================
     SerialPort serialPort;
@@ -78,6 +82,9 @@ public class GameManager : MonoBehaviour
     public float targetLifeTime = 0.1f;
     public float targetCooldown = 0.3f;
     private bool isCheckingHits = false;
+    public TMP_InputField targetLifeTimeInput;
+    public TMP_InputField targetCooldownInput;
+    public TMP_InputField spawnIntervalInput;
 
     bool[] targetActive = new bool[BUTTON_COUNT];
     float[] targetExpireTime = new float[BUTTON_COUNT];
@@ -87,6 +94,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        targetCooldownInput.text = targetCooldown.ToString("F2");
+        targetLifeTimeInput.text = targetLifeTime.ToString("F2");
+        spawnIntervalInput.text = spawnInterval.ToString("F2");
         OpenSerial();
 
         scoreStartPos = scoreObject.localPosition;
@@ -253,7 +263,7 @@ public class GameManager : MonoBehaviour
             {
                 targetActive[i] = false;
                 targetNextSpawnTime[i] = now + targetCooldown;
-                SendArduino(i);
+                SendArduino(i + 100);
             }
         }
     }
@@ -304,7 +314,7 @@ public class GameManager : MonoBehaviour
     {
         if (!targetActive[index]) return;
         isCheckingHits = true;
-        SendArduino(index);
+        SendArduino(index + 100);
         scoreAudioSource.PlayOneShot(scoreSound);
         targetActive[index] = false;
         targetNextSpawnTime[index] = Time.time + targetCooldown;
@@ -407,16 +417,41 @@ public class GameManager : MonoBehaviour
         }
         ScoreEffect.color = new Color(1, 1, 1, 0f);
     }
+    public void PlayScoreEffect()
+    {
+        StartCoroutine(ScoreEffectFlash());
+    }
+    // public void AddScore(int amount)
+    // {
+    //     score = Mathf.Clamp(score + amount, 0, 20);
+
+    //     float percent = score / 20f;
+    //     float targetX = scoreStartPos.x + scoreMoveDistance * percent;
+
+    //     scoreObject.localPosition =
+    //         new Vector3(targetX, scoreObject.localPosition.y, scoreObject.localPosition.z);
+    // }
     public void AddScore(int amount)
     {
         score = Mathf.Clamp(score + amount, 0, 20);
 
         float percent = score / 20f;
-        float targetX = scoreStartPos.x + scoreMoveDistance * percent;
 
-        scoreObject.localPosition =
-            new Vector3(targetX, scoreObject.localPosition.y, scoreObject.localPosition.z);
+        // quãng đường chuẩn
+        float baseX = scoreStartPos.x + scoreMoveDistance * percent;
+
+        // bonus theo curve
+        float bonus = bonusCurve.Evaluate(percent) * bonusDistance;
+
+        float targetX = baseX + bonus;
+
+        scoreObject.localPosition = new Vector3(
+            targetX,
+            scoreObject.localPosition.y,
+            scoreObject.localPosition.z
+        );
     }
+
     IEnumerator MoveScoreObjectToTargetX(float time)
     {
         float elapsed = 0f;
@@ -449,12 +484,14 @@ public class GameManager : MonoBehaviour
 
     void EndGame()
     {
+        WinFirstFrame.color = new Color(0, 0, 0, 1f);
         currentState = GameState.Result;
         nextTime = Time.time + AutoBackToHomeTime;
         if (score >= 20)
         {
             // ShowOnly(WinPanel);
             StartCoroutine(ChangePanel(WinPanel, GameState.Result));
+            StartCoroutine(FadeVideoCoroutine(WinFirstFrame, WinVideoFrame));
             scoreAudioSource.PlayOneShot(winSound);
         }
         else
@@ -577,5 +614,20 @@ public class GameManager : MonoBehaviour
     {
         if (serialPort != null && serialPort.IsOpen)
             serialPort.Close();
+    }
+    public void ApplyTargetSettings()
+    {
+        if (float.TryParse(targetLifeTimeInput.text, out float lifeTime))
+        {
+            targetLifeTime = lifeTime;
+        }
+        if (float.TryParse(targetCooldownInput.text, out float cooldown))
+        {
+            targetCooldown = cooldown;
+        }
+        if (float.TryParse(spawnIntervalInput.text, out float interval))
+        {
+            spawnInterval = interval;
+        }
     }
 }

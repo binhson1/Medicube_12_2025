@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5442729951521441396
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8637086044944126491}
+  - component: {fileID: 3121258856067313756}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8637086044944126491
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5442729951521441396}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3121258856067313756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5442729951521441396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c5a2db2f3d686344a9529b42ffb6de5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HomePanel: {fileID: 0}
+  TutorialPanel: {fileID: 0}
+  GamePanel: {fileID: 0}
+  WinPanel: {fileID: 0}
+  LosePanel: {fileID: 0}
+  FadeEffect: {fileID: 0}
+  FadeSpeed: 1.2
+  AutoBackToHomeTime: 5
+  GameTime: 20
+  CountDownTime: 3
+  CountDownText: {fileID: 0}
+  timeFillImage: {fileID: 0}
+  scoreObject: {fileID: 0}
+  scoreMoveDistance: 606
+  bonusCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.7200893
+      value: 0.8890059
+      inSlope: -0.5860245
+      outSlope: -0.5860245
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.14895111
+      outWeight: 0.98482364
+    - serializedVersion: 3
+      time: 0.76492095
+      value: 0.7671674
+      inSlope: -2.369711
+      outSlope: -2.369711
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.8
+      value: 0.4
+      inSlope: -0.06511617
+      outSlope: -0.06511617
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  bonusDistance: 80
+  scoreSound: {fileID: 8300000, guid: bd4e5f416c8046a49af398dcd59da7b0, type: 3}
+  winSound: {fileID: 8300000, guid: db8900bd5ad9e1f4ca480fe1304f07bb, type: 3}
+  loseSound: {fileID: 8300000, guid: 1600cdf286583604bb2f2ddd29d96adc, type: 3}
+  clickSound: {fileID: 8300000, guid: 49e4dd651feb2994aafc8cf1750a0e71, type: 3}
+  scoreAudioSource: {fileID: 0}
+  ScoreEffect: {fileID: 0}
+  ScoreSprites:
+  - {fileID: 21300000, guid: 5be14a585a407fa41a64850cd2520401, type: 3}
+  - {fileID: 21300000, guid: 2a35d3cb09f9d3b4aa69658d8031782b, type: 3}
+  - {fileID: 21300000, guid: 8b6a4abfdf9575a4e9a319af36d131af, type: 3}
+  - {fileID: 21300000, guid: 5af35c16e12abd441a711a53ea41410c, type: 3}
+  - {fileID: 21300000, guid: 280e1b89bcebfc14e8bd35510d918a3d, type: 3}
+  - {fileID: 21300000, guid: 6c7c7d10087026c4887dd81c0724b9ea, type: 3}
+  - {fileID: 21300000, guid: 0cbc36815386479408e8bd5fd0f6edfb, type: 3}
+  - {fileID: 21300000, guid: 08592f44d7949084f9b237197c95ae45, type: 3}
+  - {fileID: 21300000, guid: 24ed40dc030663641a2a312843514202, type: 3}
+  - {fileID: 21300000, guid: 95786ca6fd8432743bcf7e84af8ed602, type: 3}
+  - {fileID: 21300000, guid: 4d9e8f0e896b2e149baaeb0ca12e023a, type: 3}
+  - {fileID: 21300000, guid: 4089403b5df1b274aac2f02309d6a40f, type: 3}
+  - {fileID: 21300000, guid: f550a95c1678893419a4223f007036be, type: 3}
+  - {fileID: 21300000, guid: 07566695e2f8c2f418722df1028ea589, type: 3}
+  - {fileID: 21300000, guid: 56aef4336b59c8d45bc93cff5916ff07, type: 3}
+  - {fileID: 21300000, guid: f3d8a9c59db1d6b4ba2ebf545e19a446, type: 3}
+  - {fileID: 21300000, guid: 13f3adc0a5691324db26a1887468ee59, type: 3}
+  - {fileID: 21300000, guid: 5d02ba30dd432454f9a13b20eb6cdeaa, type: 3}
+  - {fileID: 21300000, guid: 7f7a43cdca35aa94d93c8912b20ddcaa, type: 3}
+  - {fileID: 21300000, guid: c0ffbf47b58241b4ab1bebd90dadf247, type: 3}
+  ScoreImageA: {fileID: 0}
+  ScoreImageB: {fileID: 0}
+  changeScoreImageSpeed: 0.5
+  fadeStrength: 2
+  GameImageVideo: {fileID: 0}
+  WinImageVideo: {fileID: 0}
+  LoseImageVideo: {fileID: 0}
+  GameVideoPlayer: {fileID: 0}
+  WinVideoPlayer: {fileID: 0}
+  LoseVideoPlayer: {fileID: 0}
+  videoFadeSpeed: 0.5
+  VideoFrame: {fileID: 0}
+  WinFirstFrame: {fileID: 0}
+  WinVideoFrame: {fileID: 0}
+  portName: COM3
+  baudRate: 9600
+  spawnInterval: 0.1
+  comPortInput: {fileID: 0}
+  comStatusText: {fileID: 0}
+  targetLifeTime: 0.6
+  targetCooldown: 0.3
+  targetLifeTimeInput: {fileID: 0}
+  targetCooldownInput: {fileID: 0}
+  spawnIntervalInput: {fileID: 0}
