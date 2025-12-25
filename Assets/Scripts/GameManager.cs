@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float bonusDistance = 2f;
     Vector3 scoreStartPos;
     int score = 0;
+    int realScore;      // score logic
+    int displayScore;   // score đang hiển thị UI
+    bool isAnimating;
     public AudioClip scoreSound;
     public AudioClip winSound;
     public AudioClip loseSound;
@@ -50,17 +53,16 @@ public class GameManager : MonoBehaviour
     public float changeScoreImageSpeed = 5f;
     public float fadeStrength = 2f;
     // ================= VIDEO =================
-    public RawImage GameImageVideo;
-    public RawImage WinImageVideo;
-    public RawImage LoseImageVideo;
+    // public RawImage GameImageVideo;
+    // public RawImage WinImageVideo;
+    // public RawImage LoseImageVideo;
 
-    public VideoPlayer GameVideoPlayer;
-    public VideoPlayer WinVideoPlayer;
-    public VideoPlayer LoseVideoPlayer;
+    // public VideoPlayer GameVideoPlayer; // old
+    // public VideoPlayer WinVideoPlayer;// old
+    // public VideoPlayer LoseVideoPlayer;
     public float videoFadeSpeed = 2f;
     public RawImage VideoFrame;
-    public RawImage WinFirstFrame;
-    public RawImage WinVideoFrame;
+    public VideoPlayer WinVideoPlayer;
 
     // ================= SERIAL =================
     SerialPort serialPort;
@@ -200,10 +202,12 @@ public class GameManager : MonoBehaviour
         ResetScoreSprite();
         timeFillImage.fillAmount = 1;
         VideoFrame.color = new Color(1, 1, 1, 1f);
-        GameImageVideo.color = new Color(1, 1, 1, 1f);
-        WinImageVideo.color = new Color(1, 1, 1, 0f);
-        LoseImageVideo.color = new Color(1, 1, 1, 0f);
+        // GameImageVideo.color = new Color(1, 1, 1, 1f);
+        // WinImageVideo.color = new Color(1, 1, 1, 0f);
+        // LoseImageVideo.color = new Color(1, 1, 1, 0f);
         CountDownText.gameObject.SetActive(true);
+        realScore = 0;
+        displayScore = 0;
 
         for (int i = 3; i > 0; i--)
         {
@@ -319,13 +323,15 @@ public class GameManager : MonoBehaviour
         targetActive[index] = false;
         targetNextSpawnTime[index] = Time.time + targetCooldown;
         AddScore(1);
-        StartCoroutine(ChangeScoreSpriteBetweenAB());
+        // StopCoroutine(ChangeScoreSpriteBetweenAB());
+        // StartCoroutine(ChangeScoreSpriteBetweenAB());
         StartCoroutine(ScoreEffectFlash());
         isCheckingHits = false;
     }
     public void ChangeScore()
-    {
-        StartCoroutine(ChangeScoreSpriteBetweenAB());
+    {        
+        // StopCoroutine(ChangeScoreSpriteBetweenAB());
+        // StartCoroutine(ChangeScoreSpriteBetweenAB());
     }
 
     // IEnumerator ChangeScoreSpriteBetweenAB()
@@ -357,50 +363,50 @@ public class GameManager : MonoBehaviour
     //     fadingOutImage.color = new Color(1, 1, 1, 0f);
     //     fadingInImage.color = new Color(1, 1, 1, 1f);
     // }
-    IEnumerator ChangeScoreSpriteBetweenAB()
-    {
-        if (changeScoreImageSpeed <= 0f)
-            yield break;
+    // IEnumerator ChangeScoreSpriteBetweenAB()
+    // {
+    //     if (changeScoreImageSpeed <= 0f)
+    //         yield break;
 
-        int nextScore = Mathf.Clamp(score, 0, ScoreSprites.Count - 1);
+    //     int nextScore = Mathf.Clamp(score, 0, ScoreSprites.Count - 1);
 
-        Image fadingOut;
-        Image fadingIn;
+    //     Image fadingOut;
+    //     Image fadingIn;
 
-        // Xác định image đang hiển thị
-        if (ScoreImageA.color.a >= 0.99f)
-        {
-            fadingOut = ScoreImageA;
-            fadingIn = ScoreImageB;
-        }
-        else
-        {
-            fadingOut = ScoreImageB;
-            fadingIn = ScoreImageA;
-        }
+    //     // Xác định image đang hiển thị
+    //     if (ScoreImageA.color.a >= 0.99f)
+    //     {
+    //         fadingOut = ScoreImageA;
+    //         fadingIn = ScoreImageB;
+    //     }
+    //     else
+    //     {
+    //         fadingOut = ScoreImageB;
+    //         fadingIn = ScoreImageA;
+    //     }
 
-        // Chuẩn bị image mới
-        fadingIn.sprite = ScoreSprites[nextScore];
-        fadingIn.color = new Color(1, 1, 1, 0f); // bắt đầu từ trong suốt
-        fadingIn.gameObject.SetActive(true);
+    //     // Chuẩn bị image mới
+    //     fadingIn.sprite = ScoreSprites[nextScore];
+    //     fadingIn.color = new Color(1, 1, 1, 0f); // bắt đầu từ trong suốt
+    //     fadingIn.gameObject.SetActive(true);
 
-        float elapsed = 0f;
+    //     float elapsed = 0f;
 
-        while (elapsed < changeScoreImageSpeed)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / changeScoreImageSpeed);
+    //     while (elapsed < changeScoreImageSpeed)
+    //     {
+    //         elapsed += Time.deltaTime;
+    //         float t = Mathf.Clamp01(elapsed / changeScoreImageSpeed);
 
-            fadingOut.color = new Color(1, 1, 1, 1f - t);
-            fadingIn.color = new Color(1, 1, 1, t);
+    //         fadingOut.color = new Color(1, 1, 1, 1f - t);
+    //         fadingIn.color = new Color(1, 1, 1, t);
 
-            yield return null;
-        }
+    //         yield return null;
+    //     }
 
-        // Kết thúc fade
-        fadingOut.color = new Color(1, 1, 1, 0f);
-        fadingIn.color = new Color(1, 1, 1, 1f);
-    }
+    //     // Kết thúc fade
+    //     fadingOut.color = new Color(1, 1, 1, 0f);
+    //     fadingIn.color = new Color(1, 1, 1, 1f);
+    // }
 
     IEnumerator ScoreEffectFlash()
     {
@@ -433,6 +439,12 @@ public class GameManager : MonoBehaviour
     // }
     public void AddScore(int amount)
     {
+         realScore += amount;
+
+        if (!isAnimating)
+        {
+            StartCoroutine(AnimateScore());
+        }
         score = Mathf.Clamp(score + amount, 0, 20);
 
         float percent = score / 20f;
@@ -451,6 +463,76 @@ public class GameManager : MonoBehaviour
             scoreObject.localPosition.z
         );
     }
+IEnumerator AnimateScore()
+{
+    isAnimating = true;
+
+    while (displayScore < realScore)
+    {
+        displayScore++;
+
+        yield return StartCoroutine(
+            ChangeScoreSpriteBetweenAB(displayScore)
+        );
+    }
+
+    isAnimating = false;
+}
+
+IEnumerator ChangeScoreSpriteBetweenAB(int scoreToShow)
+{
+    int nextScore = Mathf.Clamp(scoreToShow, 0, ScoreSprites.Count - 1);
+
+    // Tính fade động
+    float minFadeTime = 0.05f;
+    float maxFadeTime = 0.25f;
+
+    int delta = realScore - displayScore;
+
+    float fadeTime = Mathf.Lerp(
+        maxFadeTime,
+        minFadeTime,
+        Mathf.InverseLerp(1, 5, delta)
+    );
+
+    Image fadingOut;
+    Image fadingIn;
+
+    // Chọn image đang hiển thị (an toàn)
+    if (ScoreImageA.color.a > ScoreImageB.color.a)
+    {
+        fadingOut = ScoreImageA;
+        fadingIn = ScoreImageB;
+    }
+    else
+    {
+        fadingOut = ScoreImageB;
+        fadingIn = ScoreImageA;
+    }
+
+    // Chuẩn bị image mới
+    fadingIn.sprite = ScoreSprites[nextScore];
+    fadingIn.color = new Color(1, 1, 1, 0);
+    fadingIn.gameObject.SetActive(true);
+
+    float elapsed = 0f;
+
+    while (elapsed < fadeTime)
+    {
+        elapsed += Time.deltaTime;
+        float t = elapsed / fadeTime;
+
+        fadingOut.color = new Color(1, 1, 1, 1f - t);
+        fadingIn.color = new Color(1, 1, 1, t);
+
+        yield return null;
+    }
+
+    // Kết thúc fade
+    fadingOut.color = new Color(1, 1, 1, 0);
+    fadingIn.color = Color.white;
+}
+
 
     IEnumerator MoveScoreObjectToTargetX(float time)
     {
@@ -467,31 +549,33 @@ public class GameManager : MonoBehaviour
         }
         yield return null;
     }
-    void DecideResultVideo()
-    {
-        if (score >= 14)
-        {
-            FadeVideo(GameImageVideo, WinImageVideo);
-            WinVideoPlayer.Play();
-            StartCoroutine(MoveScoreObjectToTargetX(5f));
-        }
-        else
-        {
-            FadeVideo(GameImageVideo, LoseImageVideo);
-            LoseVideoPlayer.Play();
-        }
-    }
+    // void DecideResultVideo()
+    // {
+    //     if (score >= 14)
+    //     {
+    //         FadeVideo(GameImageVideo, WinImageVideo);
+    //         WinVideoPlayer.Play();
+    //         StartCoroutine(MoveScoreObjectToTargetX(5f));
+    //     }
+    //     else
+    //     {
+    //         FadeVideo(GameImageVideo, LoseImageVideo);
+    //         LoseVideoPlayer.Play();
+    //     }
+    // }
 
     void EndGame()
     {
-        WinFirstFrame.color = new Color(0, 0, 0, 1f);
+        // WinFirstFrame.color = new Color(0, 0, 0, 1f);
         currentState = GameState.Result;
         nextTime = Time.time + AutoBackToHomeTime;
         if (score >= 20)
         {
             // ShowOnly(WinPanel);
             StartCoroutine(ChangePanel(WinPanel, GameState.Result));
-            StartCoroutine(FadeVideoCoroutine(WinFirstFrame, WinVideoFrame));
+            // StartCoroutine(FadeVideoCoroutine(WinFirstFrame, WinVideoFrame));
+            
+
             scoreAudioSource.PlayOneShot(winSound);
         }
         else
@@ -501,6 +585,18 @@ public class GameManager : MonoBehaviour
         }
         SendArduino(-1);
         SendArduino(0);
+    }
+
+    IEnumerator PrepareWinVideo()
+    {
+        VideoFrame.color = new Color(1, 1, 1, 1f);
+        yield return new WaitForSeconds(1f);
+        WinVideoPlayer.Prepare();
+        WinVideoPlayer.prepareCompleted += (source) =>
+        {
+            VideoFrame.color = new Color(1, 1, 1, 1f);
+            WinVideoPlayer.Play();
+        };
     }
 
     // ================= UI =================
