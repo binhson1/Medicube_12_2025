@@ -14,7 +14,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/GameSceneV2.unity
     guid: 041cd90c778f6d64f96e54541d08a700
-  - enabled: 1
-    path: Assets/Scenes/GameSceneV3.unity
+  - enabled: 0
+    path: Assets/Scenes/GameSceneV3 Video Score Fade Fix.unity
     guid: da6d385b4e0afa843b8de856f537b4ea
+  - enabled: 1
+    path: Assets/Scenes/GameSceneV4 Image Sequence.unity
+    guid: 58dd6627e5066704db2212b35e496846
   m_configObjects: {}

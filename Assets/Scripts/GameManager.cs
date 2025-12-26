@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
     public float videoFadeSpeed = 2f;
     public RawImage VideoFrame;
     public VideoPlayer WinVideoPlayer;
+    private bool firstTimeWinVideoPlayed = false;
 
     // ================= SERIAL =================
     SerialPort serialPort;
@@ -329,7 +330,7 @@ public class GameManager : MonoBehaviour
         isCheckingHits = false;
     }
     public void ChangeScore()
-    {        
+    {
         // StopCoroutine(ChangeScoreSpriteBetweenAB());
         // StartCoroutine(ChangeScoreSpriteBetweenAB());
     }
@@ -439,7 +440,7 @@ public class GameManager : MonoBehaviour
     // }
     public void AddScore(int amount)
     {
-         realScore += amount;
+        realScore += amount;
 
         if (!isAnimating)
         {
@@ -463,75 +464,75 @@ public class GameManager : MonoBehaviour
             scoreObject.localPosition.z
         );
     }
-IEnumerator AnimateScore()
-{
-    isAnimating = true;
-
-    while (displayScore < realScore)
+    IEnumerator AnimateScore()
     {
-        displayScore++;
+        isAnimating = true;
 
-        yield return StartCoroutine(
-            ChangeScoreSpriteBetweenAB(displayScore)
+        while (displayScore < realScore)
+        {
+            displayScore++;
+
+            yield return StartCoroutine(
+                ChangeScoreSpriteBetweenAB(displayScore)
+            );
+        }
+
+        isAnimating = false;
+    }
+
+    IEnumerator ChangeScoreSpriteBetweenAB(int scoreToShow)
+    {
+        int nextScore = Mathf.Clamp(scoreToShow, 0, ScoreSprites.Count - 1);
+
+        // Tính fade động
+        float minFadeTime = 0.05f;
+        float maxFadeTime = 0.25f;
+
+        int delta = realScore - displayScore;
+
+        float fadeTime = Mathf.Lerp(
+            maxFadeTime,
+            minFadeTime,
+            Mathf.InverseLerp(1, 5, delta)
         );
+
+        Image fadingOut;
+        Image fadingIn;
+
+        // Chọn image đang hiển thị (an toàn)
+        if (ScoreImageA.color.a > ScoreImageB.color.a)
+        {
+            fadingOut = ScoreImageA;
+            fadingIn = ScoreImageB;
+        }
+        else
+        {
+            fadingOut = ScoreImageB;
+            fadingIn = ScoreImageA;
+        }
+
+        // Chuẩn bị image mới
+        fadingIn.sprite = ScoreSprites[nextScore];
+        fadingIn.color = new Color(1, 1, 1, 0);
+        fadingIn.gameObject.SetActive(true);
+
+        float elapsed = 0f;
+
+        while (elapsed < fadeTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / fadeTime;
+
+            fadingOut.color = new Color(1, 1, 1, 1f - t);
+            fadingIn.color = new Color(1, 1, 1, t);
+
+            yield return null;
+        }
+
+        // Kết thúc fade
+        fadingOut.color = new Color(1, 1, 1, 0);
+        fadingIn.color = Color.white;
     }
-
-    isAnimating = false;
-}
-
-IEnumerator ChangeScoreSpriteBetweenAB(int scoreToShow)
-{
-    int nextScore = Mathf.Clamp(scoreToShow, 0, ScoreSprites.Count - 1);
-
-    // Tính fade động
-    float minFadeTime = 0.05f;
-    float maxFadeTime = 0.25f;
-
-    int delta = realScore - displayScore;
-
-    float fadeTime = Mathf.Lerp(
-        maxFadeTime,
-        minFadeTime,
-        Mathf.InverseLerp(1, 5, delta)
-    );
-
-    Image fadingOut;
-    Image fadingIn;
-
-    // Chọn image đang hiển thị (an toàn)
-    if (ScoreImageA.color.a > ScoreImageB.color.a)
-    {
-        fadingOut = ScoreImageA;
-        fadingIn = ScoreImageB;
-    }
-    else
-    {
-        fadingOut = ScoreImageB;
-        fadingIn = ScoreImageA;
-    }
-
-    // Chuẩn bị image mới
-    fadingIn.sprite = ScoreSprites[nextScore];
-    fadingIn.color = new Color(1, 1, 1, 0);
-    fadingIn.gameObject.SetActive(true);
-
-    float elapsed = 0f;
-
-    while (elapsed < fadeTime)
-    {
-        elapsed += Time.deltaTime;
-        float t = elapsed / fadeTime;
-
-        fadingOut.color = new Color(1, 1, 1, 1f - t);
-        fadingIn.color = new Color(1, 1, 1, t);
-
-        yield return null;
-    }
-
-    // Kết thúc fade
-    fadingOut.color = new Color(1, 1, 1, 0);
-    fadingIn.color = Color.white;
-}
 
 
     IEnumerator MoveScoreObjectToTargetX(float time)
@@ -574,8 +575,10 @@ IEnumerator ChangeScoreSpriteBetweenAB(int scoreToShow)
             // ShowOnly(WinPanel);
             StartCoroutine(ChangePanel(WinPanel, GameState.Result));
             // StartCoroutine(FadeVideoCoroutine(WinFirstFrame, WinVideoFrame));
-            
-
+            if (firstTimeWinVideoPlayed)
+            {
+                StartCoroutine(PrepareWinVideo());
+            }
             scoreAudioSource.PlayOneShot(winSound);
         }
         else
@@ -589,7 +592,8 @@ IEnumerator ChangeScoreSpriteBetweenAB(int scoreToShow)
 
     IEnumerator PrepareWinVideo()
     {
-        VideoFrame.color = new Color(1, 1, 1, 1f);
+        firstTimeWinVideoPlayed = true;
+        VideoFrame.color = new Color(1, 1, 1, 0f);
         yield return new WaitForSeconds(1f);
         WinVideoPlayer.Prepare();
         WinVideoPlayer.prepareCompleted += (source) =>
@@ -599,7 +603,6 @@ IEnumerator ChangeScoreSpriteBetweenAB(int scoreToShow)
         };
     }
 
-    // ================= UI =================
     void ShowOnly(GameObject panel)
     {
         HomePanel.SetActive(false);
