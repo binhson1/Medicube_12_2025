@@ -629,7 +629,7 @@ PrefabInstance:
     - target: {fileID: 3121258856067313756, guid: 3fbf9d8b818480644aab93210ad1ef55, type: 3}
       propertyPath: winSound
       value: 
-      objectReference: {fileID: 8300000, guid: 8e3651e890dc323439653cb4405aaf84, type: 3}
+      objectReference: {fileID: 8300000, guid: 863e2dc8469f23f4dbd57409825e064f, type: 3}
     - target: {fileID: 3121258856067313756, guid: 3fbf9d8b818480644aab93210ad1ef55, type: 3}
       propertyPath: FadeSpeed
       value: 1.5
@@ -649,7 +649,7 @@ PrefabInstance:
     - target: {fileID: 3121258856067313756, guid: 3fbf9d8b818480644aab93210ad1ef55, type: 3}
       propertyPath: loseSound
       value: 
-      objectReference: {fileID: 8300000, guid: 59e0a99863a2de843a1f3373cf5447f7, type: 3}
+      objectReference: {fileID: 8300000, guid: e5359afd0ae1c0845913148631a16682, type: 3}
     - target: {fileID: 3121258856067313756, guid: 3fbf9d8b818480644aab93210ad1ef55, type: 3}
       propertyPath: FadeEffect
       value: 
