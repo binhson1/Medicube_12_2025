@@ -491,6 +491,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BG Music
       objectReference: {fileID: 0}
+    - target: {fileID: 5941768602957570618, guid: afbc4bb1cb1b7d842b968432c86b9e1b, type: 3}
+      propertyPath: m_Volume
+      value: 0.543
+      objectReference: {fileID: 0}
     - target: {fileID: 6797580673548848437, guid: afbc4bb1cb1b7d842b968432c86b9e1b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.1572187
